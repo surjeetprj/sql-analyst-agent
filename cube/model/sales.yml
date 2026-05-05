@@ -22,13 +22,27 @@ cubes:
         type: count
 
     dimensions:
+      - name: saleId
+        type: number
+        sql: sale_id
+        primary_key: true
+
       - name: saleDate
         type: time
         sql: sale_date
+        
+      - name: quantity
+        type: number
+        sql: quantity
 
   - name: Customers
     sql_table: public.customers
     dimensions:
+      - name: customerId
+        type: number
+        sql: customer_id
+        primary_key: true
+        
       - name: companyName
         type: string
         sql: company_name
@@ -42,9 +56,17 @@ cubes:
   - name: Products
     sql_table: public.products
     dimensions:
+      - name: productId
+        type: number
+        sql: product_id
+        primary_key: true
+
       - name: productName
         type: string
         sql: product_name
       - name: category
         type: string
         sql: category
+      - name: price
+        type: number
+        sql: price

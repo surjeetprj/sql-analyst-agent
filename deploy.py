@@ -15,6 +15,7 @@ app_image = (
         "PyJWT"
     )
     .add_local_dir("src", remote_path="/root/src")  # <--- The 1.0 Fix
+    .add_local_dir("cube/model", remote_path="/root/cube/model") # <--- Inject real schema
 )
 
 # 2. Initialize the Modal App

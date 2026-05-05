@@ -38,17 +38,19 @@ auditor = SQLSecurityAuditor()
 @traceable(name="context_retriever")
 def context_retriever_node(state: AgentState):
     print("🧠 [Planner]: Retrieving Semantic Schema...")
-    mock_cube_schema = """
-    Tables: 
-    1. sales (sale_id, customer_id, product_id, quantity, sale_date)
-    2. customers (customer_id, company_name, industry, region)
-    3. products (product_id, product_name, category, price)
     
-    Relationships:
-    - sales.customer_id joins to customers.customer_id
-    - sales.product_id joins to products.product_id
-    """
-    return {"schema_context": mock_cube_schema}
+    try:
+        # Dynamically find the project root and locate the real Cube YAML file
+        base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
+        yaml_path = os.path.join(base_dir, "cube", "model", "sales.yml")
+        
+        with open(yaml_path, "r") as f:
+            real_cube_schema = f.read()
+    except Exception as e:
+        print(f"⚠️ [Planner]: Could not read cube YAML: {e}")
+        real_cube_schema = "Schema not found."
+        
+    return {"schema_context": real_cube_schema}
 
 @traceable(name="sql_coder")
 def sql_coder_node(state: AgentState):
