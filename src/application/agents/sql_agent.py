@@ -7,7 +7,8 @@ from langsmith import traceable
 from sqlalchemy import text
 from sqlalchemy.exc import SQLAlchemyError
 from src.domain.services.security_auditor import SQLSecurityAuditor
-from src.infrastructure.config import settings
+from src.infrastructure.config import get_backend_settings
+settings = get_backend_settings()
 from src.infrastructure.database.session import AsyncSessionFactory
 
 # Inject LangSmith settings into OS environment so LangChain automatically traces

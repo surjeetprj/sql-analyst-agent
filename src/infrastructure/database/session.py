@@ -1,6 +1,7 @@
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sessionmaker
 from typing import AsyncGenerator
-from src.infrastructure.config import settings
+from src.infrastructure.config import get_backend_settings
+settings = get_backend_settings()
 
 # 1. The Engine: This is the actual connection pool to PostgreSQL
 engine = create_async_engine(

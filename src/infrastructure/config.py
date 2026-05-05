@@ -1,15 +1,23 @@
 from pydantic_settings import BaseSettings, SettingsConfigDict
+from functools import lru_cache
 
-class Settings(BaseSettings):
-    PROJECT_NAME: str
-    CUBE_API_URL: str
+class AppConfig(BaseSettings):
+    model_config = SettingsConfigDict(env_file=".env", extra="ignore")
+
+class FrontendSettings(AppConfig):
+    API_BASE_URL: str = "http://127.0.0.1:8000"
+    API_USERNAME: str
+    API_PASSWORD: str
+
+class BackendSettings(AppConfig):
+    PROJECT_NAME: str = "Enterprise SQL Agent"
+    CUBE_API_URL: str = ""
     GROQ_API_KEY: str
 
     # API Security
     JWT_SECRET_KEY: str = "fallback_secret"
     JWT_ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
-    API_BASE_URL: str = "http://127.0.0.1:8000"
     API_USERNAME: str
     API_PASSWORD: str
 
@@ -36,8 +44,10 @@ class Settings(BaseSettings):
         url = url.replace("sslmode=require", "ssl=require")
         return url
 
-    # This tells Pydantic to automatically look for the .env file in the root directory
-    model_config = SettingsConfigDict(env_file=".env", extra="ignore")
+@lru_cache()
+def get_frontend_settings() -> FrontendSettings:
+    return FrontendSettings()
 
-# Create a global instance to use throughout the app
-settings = Settings()
+@lru_cache()
+def get_backend_settings() -> BackendSettings:
+    return BackendSettings()

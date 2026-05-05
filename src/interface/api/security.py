@@ -2,7 +2,8 @@ import time
 import jwt
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
-from src.infrastructure.config import settings
+from src.infrastructure.config import get_backend_settings
+settings = get_backend_settings()
 
 SECRET_KEY = settings.JWT_SECRET_KEY
 ALGORITHM = "HS256"

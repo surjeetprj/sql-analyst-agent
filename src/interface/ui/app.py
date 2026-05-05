@@ -7,7 +7,8 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../.
 import streamlit as st
 import requests
 import pandas as pd
-from src.infrastructure.config import settings
+from src.infrastructure.config import get_frontend_settings
+settings = get_frontend_settings()
 st.set_page_config(
     page_title="Enterprise SQL Analyst",
     page_icon="📊",

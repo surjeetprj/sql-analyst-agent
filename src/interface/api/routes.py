@@ -7,7 +7,8 @@ from sqlalchemy.exc import SQLAlchemyError
 from src.application.agents.sql_agent import sql_agent_graph
 from src.infrastructure.database.session import AsyncSessionFactory
 from src.interface.api.security import verify_token, create_access_token
-from src.infrastructure.config import settings
+from src.infrastructure.config import get_backend_settings
+settings = get_backend_settings()
 
 router = APIRouter()
 
