@@ -2,7 +2,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 from functools import lru_cache
 
 class AppConfig(BaseSettings):
-    model_config = SettingsConfigDict(env_file=".env", extra="ignore")
+    model_config = SettingsConfigDict(env_file=".env", extra="ignore", str_strip_whitespace=True)
 
 class FrontendSettings(AppConfig):
     API_BASE_URL: str = "http://127.0.0.1:8000"
