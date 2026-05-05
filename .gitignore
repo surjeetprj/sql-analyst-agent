@@ -1,0 +1,70 @@
+# Environment Variables (CRITICAL: Never commit secrets)
+.env
+.env.*
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Virtual Environments
+.venv/
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# Python Cache and Compiled Files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Python Package and Distribution files
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# IDE and Editor Directories
+.vscode/
+.idea/
+.spyderproject
+.ropeproject
+*.swp
+*.swo
+
+# Project/Dependency Managers
+.uv/
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Cube.dev Semantic Layer
+cube/node_modules/
+cube/.env
+cube/dist/
+cube/package-lock.json
+cube/yarn.lock
+
+# Logs and Testing
+*.log
+.pytest_cache/
+.coverage
+htmlcov/
+
+# System Files
+.DS_Store
+Thumbs.db

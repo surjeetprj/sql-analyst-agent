@@ -1,0 +1,50 @@
+cubes:
+  - name: Sales
+    sql_table: public.sales
+    
+    # Teach the AI how to JOIN tables
+    joins:
+      - name: Customers
+        sql: "{CUBE}.customer_id = {Customers}.customer_id"
+        relationship: belongsTo
+      - name: Products
+        sql: "{CUBE}.product_id = {Products}.product_id"
+        relationship: belongsTo
+
+    measures:
+      - name: totalRevenue
+        type: sum
+        # AI no longer has to guess how to calculate revenue!
+        sql: "{quantity} * {Products.price}"
+        description: "Total revenue calculated as quantity multiplied by product price."
+
+      - name: totalSales
+        type: count
+
+    dimensions:
+      - name: saleDate
+        type: time
+        sql: sale_date
+
+  - name: Customers
+    sql_table: public.customers
+    dimensions:
+      - name: companyName
+        type: string
+        sql: company_name
+      - name: industry
+        type: string
+        sql: industry
+      - name: region
+        type: string
+        sql: region
+
+  - name: Products
+    sql_table: public.products
+    dimensions:
+      - name: productName
+        type: string
+        sql: product_name
+      - name: category
+        type: string
+        sql: category
