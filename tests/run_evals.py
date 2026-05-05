@@ -53,6 +53,10 @@ async def evaluate_agent():
     print("==========================================")
     print(f"🏆 Final Agent Accuracy: {accuracy:.1f}% ({passed_tests}/{total_tests})")
     print("==========================================")
+    
+    if accuracy < 100.0:
+        print("❌ Pipeline failed: Agent did not pass all golden dataset tests.")
+        sys.exit(1)
 
 if __name__ == "__main__":
     asyncio.run(evaluate_agent())
