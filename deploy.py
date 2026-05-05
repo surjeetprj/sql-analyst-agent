@@ -24,8 +24,8 @@ app = modal.App("enterprise-sql-agent")
 # 3. Teleport the FastAPI app into the Cloud
 @app.function(
     image=app_image,
-    # This securely injects your local .env file (Groq Key & DB URL) into the cloud
-    secrets=[modal.Secret.from_dotenv()] 
+    # Securely pulls your encrypted secrets directly from Modal's Cloud Dashboard
+    secrets=[modal.Secret.from_name("enterprise-sql-secrets")] 
 )
 @modal.asgi_app()
 def serve():
