@@ -15,9 +15,38 @@ st.set_page_config(
     layout="wide"
 )
 
-# ... inside the chat loop ...
-# (The code down below relies on these loaded settings)
+# --- SIDEBAR: Context & Schema Guide ---
+with st.sidebar:
+    st.header("📚 Database Guide")
+    st.markdown("Welcome! I am an AI Agent connected to a PostgreSQL database. Below is the data I have access to:")
+    
+    st.subheader("Available Tables")
+    st.markdown("""
+    *   **`sales`**: transaction data (`id`, `quantity`, `created_at`, `product_id`, `customer_id`)
+    *   **`customers`**: client data (`id`, `name`, `city`)
+    *   **`products`**: inventory data (`id`, `name`, `category`, `price`)
+    """)
+    
+    st.subheader("Key Metrics (Semantic Layer)")
+    st.markdown("""
+    *   **Revenue**: Automatically calculated as `sales.quantity * products.price`
+    *   **Total Quantity**: Sum of `sales.quantity`
+    """)
 
+    st.divider()
+    
+    st.subheader("💡 Example Questions")
+    st.markdown("""
+    Try asking me:
+    1. *"What is the total revenue?"*
+    2. *"Show me the top 3 cities by total sales revenue."*
+    3. *"How many products do we have in the Electronics category?"*
+    4. *"Who is our best customer based on total items purchased?"*
+    """)
+    
+    st.info("I am equipped with self-healing SQL execution and SQL-injection guardrails!")
+
+# --- MAIN CHAT INTERFACE ---
 st.title("📊 Enterprise SQL Analyst Agent")
 st.markdown("Ask natural language questions about your database. I'll translate them to safe SQL and give you the data!")
 
