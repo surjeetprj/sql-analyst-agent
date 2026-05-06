@@ -1,20 +1,5 @@
 services:
-  # 1. The Raw Database
-  postgres_db:
-    image: postgres:15-alpine
-    container_name: sql_agent_postgres
-    restart: always
-    environment:
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DB}
-    ports:
-      - "5432:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-      - ./database/init_db.sql:/docker-entrypoint-initdb.d/init_db.sql
-
-  # 2. The Semantic Layer (The "Dictionary" for your AI)
+  # The Semantic Layer (Connected to Neon DB)
   cube:
     image: cubejs/cube:latest
     container_name: sql_agent_cube
@@ -23,47 +8,12 @@ services:
       - "3000:3000"
     environment:
       CUBEJS_DB_TYPE: postgres
-      CUBEJS_DB_HOST: postgres_db
+      CUBEJS_DB_HOST: ${POSTGRES_HOST}
       CUBEJS_DB_NAME: ${POSTGRES_DB}
       CUBEJS_DB_USER: ${POSTGRES_USER}
       CUBEJS_DB_PASS: ${POSTGRES_PASSWORD}
+      CUBEJS_DB_PORT: ${POSTGRES_PORT}
+      CUBEJS_DB_SSL: "true"
       CUBEJS_DEV_MODE: ${CUBEJS_DEV_MODE}
-    depends_on:
-      - postgres_db
     volumes:
       - ./cube/model:/cube/conf/model
-
-  # 3. The Backend API
-  fastapi_backend:
-    build: .
-    container_name: sql_agent_api
-    restart: always
-    ports:
-      - "8000:8000"
-    command: ["fastapi", "run", "src/interface/api/main.py", "--host", "0.0.0.0", "--port", "8000"]
-    env_file:
-      - .env
-    environment:
-      - POSTGRES_HOST=postgres_db
-    depends_on:
-      - postgres_db
-      - cube
-
-  # 4. The Frontend UI
-  streamlit_ui:
-    build: .
-    container_name: sql_agent_ui
-    restart: always
-    ports:
-      - "8501:8501"
-    command: ["streamlit", "run", "src/interface/ui/app.py", "--server.port=8501", "--server.address=0.0.0.0"]
-    env_file:
-      - .env
-    environment:
-      - API_BASE_URL=http://fastapi_backend:8000
-    depends_on:
-      - fastapi_backend
-
-# Top-level volume declaration (MUST be flush left)
-volumes:
-  postgres_data:
