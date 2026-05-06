@@ -43,7 +43,31 @@ The backend is built around a cyclic **LangGraph** workflow:
    ```bash
    uv pip install -e .
    ```
-2. Set up your local `.env` file with your Database and API Keys.
+2. Set up your local `.env` file with the required credentials. Create a file named `.env` in the root directory and add the following:
+   ```env
+   # Core Application Settings
+   PROJECT_NAME="Enterprise SQL Analyst Agent"
+   
+   # Database Connections (Neon Serverless Postgres)
+   POSTGRES_USER="your_database_user"
+   POSTGRES_PASSWORD="your_database_password"
+   POSTGRES_DB="your_database_name"
+   DATABASE_URL="postgresql://user:pass@host/dbname?sslmode=require"
+   
+   # External API Keys
+   GROQ_API_KEY="gsk_your_llama3_key_here"
+   
+   # Backend API Authentication (For Swagger & Streamlit Login)
+   JWT_SECRET_KEY="your_custom_secret_key"
+   API_USERNAME="admin"
+   API_PASSWORD="your_custom_password"
+   
+   # (Optional) LangSmith Tracing
+   LANGCHAIN_TRACING_V2="true"
+   LANGCHAIN_ENDPOINT="https://api.smith.langchain.com"
+   LANGCHAIN_API_KEY="your_langsmith_key"
+   LANGCHAIN_PROJECT="sql-analyst-agent-prod"
+   ```
 3. Run the backend server:
    ```bash
    uv run fastapi dev src/interface/api/main.py
