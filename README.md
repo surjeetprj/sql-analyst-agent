@@ -94,6 +94,19 @@ graph TD
    uv run streamlit run src/interface/ui/app.py
    ```
 
+## 🗄️ Database Initialization
+
+This repository includes a pre-configured database schema and sample data to help you get started quickly.
+
+### For Local (Docker) Setup
+If you are using Docker, the database will be automatically initialized when you run `docker-compose up`. The initialization script is located at `database/init_db.sql`.
+
+### For Cloud/Manual Setup
+If you are using a cloud database like Neon, you can manually run the initialization script:
+1. Open your database console (e.g., Neon Console).
+2. Copy the contents of `database/init_db.sql`.
+3. Paste and execute the SQL script in your database's SQL editor.
+
 ## 🌐 Deployment
 
 The project is configured for continuous deployment using GitHub Actions.
