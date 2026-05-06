@@ -94,18 +94,20 @@ graph TD
    uv run streamlit run src/interface/ui/app.py
    ```
 
-## 🗄️ Database Initialization
+## 🗄️ Database Setup (Neon)
 
-This repository includes a pre-configured database schema and sample data to help you get started quickly.
+This project is optimized for **Neon Serverless PostgreSQL**. To initialize your database:
+1. Open your [Neon Console](https://console.neon.tech/).
+2. Create a new project and database.
+3. The schema and sample data are no longer provided as a local file but are expected to exist in your Neon instance. (You can use the schema definitions found in `cube/model/sales.yml` as a guide).
 
-### For Local (Docker) Setup
-If you are using Docker, the database will be automatically initialized when you run `docker-compose up`. The initialization script is located at `database/init_db.sql`.
+## 🐳 Local Docker (Cube only)
 
-### For Cloud/Manual Setup
-If you are using a cloud database like Neon, you can manually run the initialization script:
-1. Open your database console (e.g., Neon Console).
-2. Copy the contents of `database/init_db.sql`.
-3. Paste and execute the SQL script in your database's SQL editor.
+Since the database and application are cloud-native, Docker is only used locally to run the **Cube.js** semantic layer for development:
+```bash
+docker-compose up
+```
+This will start the Cube server at `http://localhost:4000`, connected directly to your Neon instance.
 
 ## 🌐 Deployment
 
