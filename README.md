@@ -32,6 +32,23 @@ The backend is built around a cyclic **LangGraph** workflow:
 3.  **Security Auditor Node:** Validates the query to ensure it only performs `SELECT` operations. Blocks malicious injection attempts.
 4.  **Database Executor Node:** Executes the query asynchronously via `asyncpg`. If an error occurs, the graph routes back to the Coder Node.
 
+```mermaid
+graph TD
+    User([Streamlit User]) -->|Natural Language Query| API[FastAPI Backend]
+    
+    subgraph LangGraph AI Agent
+        API --> Context[1. Context Retriever Node]
+        Context -->|Injects Cube.js Schema| Coder[2. SQL Coder Node]
+        Coder -->|Generates SQL| Auditor[3. Security Auditor Node]
+        
+        Auditor -->|Malicious SQL Detected| Blocked([Block Execution & Return Error])
+        Auditor -->|Safe SELECT Query| Executor[4. Database Executor Node]
+        
+        Executor -->|Execution Failed| Coder
+        Executor -->|Execution Succeeded| ReturnData([Return Data to User])
+    end
+```
+
 ## 💻 Local Development
 
 ### Prerequisites
