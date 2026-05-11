@@ -117,7 +117,8 @@ async def execute_sql_node(state: AgentState):
             return {"data": data, "error_message": ""}
     except SQLAlchemyError as e:
         print(f"⚠️ [Executor]: SQL execution failed: {e}")
-        return {"error_message": str(e)}
+        retries = state.get("auditor_retries", 0)
+        return {"error_message": str(e), "auditor_retries": retries + 1}
 
 
 workflow = StateGraph(AgentState)
@@ -131,22 +132,42 @@ workflow.set_entry_point("retriever")
 workflow.add_edge("retriever", "coder")
 workflow.add_edge("coder", "auditor")
 
+MAX_RETRIES = 3
+
 def auditor_router(state: AgentState):
-    # If the query is UNSAFE (malicious), DO NOT self-heal. Hard stop!
+    retries = state.get("auditor_retries", 0)
+
+    # Hard stop: SQL injection detected — never self-heal a malicious query
     if not state["is_safe"] and "SQL Injection" in state["error_message"]:
+        print(f"🚫 [Router]: SQL Injection blocked. Terminating.")
         return END
-        
-    # If the query is safe, route to the Database Executor!
+
+    # If the query is safe, route to the Database Executor
     if state["is_safe"]:
         return "executor"
-        
+
+    # Unsafe for another reason — retry up to MAX_RETRIES
+    if retries < MAX_RETRIES:
+        print(f"🔄 [Router]: Auditor retry {retries}/{MAX_RETRIES}. Sending back to coder.")
+        return "coder"
+
+    # Retry limit exceeded — terminate
+    print(f"❌ [Router]: Max auditor retries ({MAX_RETRIES}) reached. Terminating.")
     return END
 
 def executor_router(state: AgentState):
-    # If there is a syntax error from the database, route back to the coder!
+    retries = state.get("auditor_retries", 0)
+
+    # DB execution failed — retry up to MAX_RETRIES
     if state.get("error_message"):
-        return "coder"
-    # Otherwise, we have our data, finish the graph!
+        if retries < MAX_RETRIES:
+            print(f"🔄 [Router]: Executor retry {retries}/{MAX_RETRIES}. Sending back to coder.")
+            return "coder"
+        # Retry limit exceeded — terminate
+        print(f"❌ [Router]: Max executor retries ({MAX_RETRIES}) reached. Terminating.")
+        return END
+
+    # No error — we have our data, finish the graph
     return END
 
 workflow.add_conditional_edges("auditor", auditor_router)
